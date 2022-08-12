@@ -1,3 +1,4 @@
+from multiprocessing import connection
 import sqlite3
 
 from flask import Flask, render_template
@@ -16,6 +17,11 @@ def set_sqlite_pragma(dpabi_connection, connection_record):
         cursor = dpabi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
+
+def get_db_connection():
+    connect = sqlite3.connect('database.db')
+    connect.row_factory = sqlite3.Row
+    return connect
 
 @app.route("/")
 def home():
