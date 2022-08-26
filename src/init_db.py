@@ -8,8 +8,8 @@ with open('schema.sql') as schema:
 
 cursor = connection.cursor()
 
-cursor.execute("INSERT INTO users (username, first_name, last_name) VALUES (?,?)",
-            ('sophiemitchell', 'Sophie', 'Mitchell'))
+# cursor.execute("INSERT INTO user (username, first_name, last_name) VALUES (?,?,?)",
+#             ('sophiemitchell', 'Sophie', 'Mitchell'))
 
 connection.commit()
 connection.close()

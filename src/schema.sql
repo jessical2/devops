@@ -4,7 +4,7 @@ CREATE TABLE user (
     employee_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL
+    password TEXT NOT NULL
 );
 
 CREATE TABLE room (
@@ -17,7 +17,7 @@ CREATE TABLE room (
     -- projector BOOLEAN NOT NULL CHECK (IN (0,1)),
     -- CHECK (telephone IN (0,1)),
     -- CHECK (projector IN (0,1))
-)
+);
 
 CREATE TABLE booking (
     booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,4 +27,4 @@ CREATE TABLE booking (
     room_id INTEGER NOT NULL ,
     FOREIGN KEY (employee_id) REFERENCES user (employee_id),
     FOREIGN KEY (room_id) REFERENCES room (room_id)
-)
+);

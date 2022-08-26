@@ -14,5 +14,5 @@ source .venv/bin/activate
 2. Install flask and packages
 ```
 python -m pip install flask
-pip install flask-sqlalchemy
+pip install flask-sqlalchemy flask-login 
 ```
