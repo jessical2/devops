@@ -55,13 +55,6 @@ def signup():
 def booking():
     return render_template('booking.html')
 
-
-# @app.route("/addrec", methods = ["POST", 'GET'])
-# def addrec():
-#     return
-    # if request.method == 'POST':
-
-
 @app.route("/booked")
 def booked():
     return render_template("booked.html")
