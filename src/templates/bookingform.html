@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5 text-center">
+            <h2 class="display-5 fw-bold">Bookings</h2>
+            <form action = "{{ url_for('main.booked') }}" method = "POST">
+                Name<br><input type= "text" name= "nm" /><br>
+                Room<br><input type= "text" name= "room" /><br>
+                Capacity<br><input type= "text" name= "capacity" /><br>
+                <br>
+                <input class= "btn btn-primary" type = "submit" value= "Book" /><br>
+            </form>
+            <!-- <p>
+                <a class="btn btn-lg btn-success" href="singup" role="button"> Book a room</a>
+            </p> -->
+        </div>
+    </div>
+{% endblock %}
