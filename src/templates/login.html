@@ -3,6 +3,13 @@
     <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-5 text-center">
             <h2>Login</h2>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="notification is-danger">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+            {% endwith %}
             <form action = "/login" method = "POST">
                 <div class="field">
                     <div class="control">

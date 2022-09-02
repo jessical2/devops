@@ -1,9 +1,9 @@
-from . import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
+from . import db
+# from werkzeug.security import generate_password_hash, check_password_hash
 
 # Create tables
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=False, nullable=False)
