@@ -1,13 +1,27 @@
+import click
 from flask import Flask
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 
+@click.command
+@with_appcontext
+def seed():
+    from .models import User
+    new_admin = User(email='admin@admin.com', name='Admin', password=generate_password_hash('Admin', method='sha256'), admin=True)
+
+    # add the new user to the database
+    db.session.add(new_admin)
+    db.session.commit()
 
 def create_app():
     app = Flask(__name__)
+
+    from .models import User
 
     app.config['SECRET_KEY'] = 'secret-key-goes-here'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -19,7 +33,13 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import User
+    # with app.app_context():
+    #     # creating an initial admin user
+    #     new_admin = db.User(email='admin@admin.com', name='Admin', password=generate_password_hash('Admin', method='sha256'), admin=True)
+
+    #     # add the new user to the database
+    #     db.session.add(new_admin)
+    #     db.session.commit()
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -32,6 +52,8 @@ def create_app():
     # blueprint for non-auth parts of app
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+    
+    app.cli.add_command(seed)
 
     return app
     # app = Flask(__name__, instance_relative_config=False)
