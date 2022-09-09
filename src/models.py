@@ -1,25 +1,21 @@
+from email.policy import default
 from flask_login import UserMixin
 from . import db
 # from werkzeug.security import generate_password_hash, check_password_hash
 
+class CustomUserMixin(UserMixin): 
+    @property
+    def is_admin(self):
+        return bool(self.admin)
+
 # Create tables
-class User(UserMixin, db.Model):
+class User(CustomUserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=False, nullable=False)
     email = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(200), primary_key=False, unique=False, nullable=False)
-
-    # def set_password(self, password):
-    # # Creates a hashed password
-    #     self.password = generate_password_hash(password, method='sha256')
-
-    # def check_password(self, password):
-    # # Checks hashed password
-    #     return check_password_hash(self.password, password)
-
-    # def __repr__(self):
-    #     return '<User {}>'.format(self.username)
+    admin = db.Column(db.Boolean, unique=False, nullable=False)
 
 # class Room(db.Model):
 #     __tablename__ = 'room'
