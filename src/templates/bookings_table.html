@@ -1,0 +1,25 @@
+<table class="table" align="center">
+    <thead>
+        {% if admin_page %}<th>User Email</th>{% endif %}
+        <th>Meeting Name</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Room Name</th>
+    </thead>
+    {% for item in bookings %}
+    <tr>
+        {% if admin_page %}<td>{{ item.User.email }}</td>{% endif %}
+        <td>{{ item.Booking.booking_name }}</td>
+        <td>{{ fromtimestamp(item.Booking.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ fromtimestamp(item.Booking.end_time).strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ item.Room.name }}</td>
+        {% if item.User and item.User.is_admin %}
+            <td>
+                <form action="/bookings/{{ item.Booking.id }}" method="post">
+                    <input type="submit" value="Delete" />
+                </form>
+            </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>

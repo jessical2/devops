@@ -16,3 +16,17 @@ source .venv/bin/activate
 python -m pip install flask
 pip install flask-sqlalchemy flask-login 
 ```
+3.
+```
+python
+from src import db, create_app
+db.create_all(app=create_app())
+```
+4.
+```
+flask seed
+```
+5.
+```
+flask run
+```

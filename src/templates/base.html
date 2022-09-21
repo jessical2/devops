@@ -20,12 +20,12 @@
                         <span class="fs-4">Meeting Room Booking App</span>
                     </a>
                     <ul class="nav nav-pills"> 
-                        <li class="nav-item">
-                            <a href="/" class="nav-link active">Home</a>
-                        </li>
                         {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a href="/booking" class="nav-link">Book</a>
+                            <a href="/book" class="nav-link active">Book</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/bookings" class="nav-link">Bookings</a>
                         </li>
                         {% if current_user.is_admin %}
                         <li class="nav-item">
