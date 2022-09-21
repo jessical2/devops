@@ -22,14 +22,16 @@ class User(CustomUserMixin, db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     name = db.Column(db.String(15), unique=False, nullable=False)
 #     capacity = db.Column(db.Integer, unique=False, nullable=False)
-#     available_from = db.Column(db.Time, unique=True, nullable=False) #TODO Check
-#     available_to = db.Column(db.Time, unique=True, nullable=False) #TODO Check
+#     available_from = db.Column(db.Time, unique=True, nullable=False) #TODO Check DONT THINK NEEDED
+#     available_to = db.Column(db.Time, unique=True, nullable=False) #TODO Check DONT THINK NEEDED
 
 # class Booking(db.Model):
 #     __tablename__ = 'booking'
 #     id = db.Column(db.Integer, primary_key=True)
-#     start_datetime = db.Column(db.DateTime, unique=True, nullable=False)
-#     end_datetime = db.Column(db.DateTime, unique=True, nullable=False)
+#     start_time = db.Column(db.Integer, nullable=False)
+#     end_time = db.Column(db.Integer, nullable=False) #TODO Can be calculated or duration?
+#     date = db.Column(db.DateTime, nullable=False)
+#     duration = db.Column(db.Integer, nullable=False) #TODO Add function
 #     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 #     room_id = db.Column(db.Integer, db.ForeignKey('room.id'), nullable=False)
 
