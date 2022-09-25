@@ -13,13 +13,13 @@
             <form action = "/book" method = "POST">
                 <div class="field">
                     <div class="control">
-                        <input class="input is-large" type="text" name="name" placeholder="Meeting Name" autofocus="">
+                        <input class="input is-large" type="text" name="name" placeholder="Meeting Name" autofocus="" required>
                     </div>
                 </div>
                 <br>
                 <div class="field">
                     <div class="control">
-                        <select class="input is-large" name="room">
+                        <select class="input is-large" name="room" required>
                             <option value="" disabled selected>Select a room</option>
                             {% for item in rooms %}
                                 <option value="{{ item.id }}">{{ item.name }} (Capacity: {{ item.capacity }})</option>
@@ -30,13 +30,13 @@
                 <br>
                 <div class="field">
                     <div class="control">
-                        <input class="input is-large" type="datetime-local" name="starttime" placeholder="Start Time">
+                        <input class="input is-large" type="datetime-local" name="starttime" placeholder="Start Time" required>
                     </div>
                 </div>
                 <br>
                 <div class="field">
                     <div class="control">
-                        <input class="input is-large" type="datetime-local" name="endtime" placeholder="End Time">
+                        <input class="input is-large" type="datetime-local" name="endtime" placeholder="End Time" required>
                     </div>
                 </div>
                 <br>

@@ -3,7 +3,7 @@ from datetime import datetime
 
 from flask_login import login_required, current_user
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 
 from src.auth import login
 
@@ -33,28 +33,35 @@ def book_post():
 
     current_timestamp = int(time.time())
 
+    # Check that start and end timestamps are in the future
     if start_timestamp <= current_timestamp or end_timestamp <= current_timestamp:
         flash("Booking cannot be in the past")
         return redirect(url_for('bookings.book_page'))
-
+        
+    # Check that end time is after start time
     if end_timestamp < start_timestamp:
         flash("End time can not be before start time")
         return redirect(url_for('bookings.book_page'))
 
-    # TODO
-    # Check if room id is empty
-    # Check if start and end timestamps are in the future int(time.time())
+    
     # Query for bookings where room_id = room_id AND start_time > db.start_time AND start_time < db.end_time AND end_time > db.start_time
-    booking = Booking.query.filter(
-        and_(
-            room_id == Booking.room_id,
-            start_timestamp >= Booking.start_time,
-            end_timestamp <= Booking.end_time,
-            end_timestamp >= Booking.start_time
+    querybooking = Booking.query.filter(
+        or_(
+            and_(
+                room_id == Booking.room_id,
+                start_timestamp >= Booking.start_time,
+                start_timestamp <= Booking.end_time
+            ),
+            and_(
+                room_id == Booking.room_id,
+                start_timestamp <= Booking.start_time,
+                end_timestamp <= Booking.end_time,
+                end_timestamp >= Booking.start_time
+            )
         )
     )
 
-    if not booking:
+    if querybooking:
         flash('Room is already booked at this time')
         return redirect(url_for('bookings.book_page'))
     
@@ -72,7 +79,7 @@ def book_post():
 def bookings_page():
     bookings = db.session.query(Booking, Room, User).join(Room, Booking.room_id == Room.id).join(User, Booking.user_id == User.id).filter(Booking.user_id == current_user.id).all()
 
-    return render_template('bookings.html', admin_page=False, bookings=bookings, fromtimestamp=datetime.fromtimestamp)
+    return render_template('bookings.html', admin_page=False, bookings=bookings, fromtimestamp=datetime.fromtimestamp, current_user=current_user)
 
 @bookings.route('/bookings/<int:id>', methods=['POST'])
 def delete_bookings(id):
@@ -81,7 +88,7 @@ def delete_bookings(id):
     db.session.delete(booking)
     db.session.commit()
 
-    return redirect(url_for('bookings.bookings_page'))
+    return redirect(url_for('admin.admin_page'))
 
 def datetime_to_timestamp(input_string):
     return time.mktime(datetime.strptime(input_string, "%Y-%m-%dT%H:%M").timetuple())

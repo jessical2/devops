@@ -13,7 +13,7 @@
         <td>{{ fromtimestamp(item.Booking.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
         <td>{{ fromtimestamp(item.Booking.end_time).strftime('%Y-%m-%d %H:%M') }}</td>
         <td>{{ item.Room.name }}</td>
-        {% if item.User and item.User.is_admin %}
+        {% if current_user.is_admin%}
             <td>
                 <form action="/bookings/{{ item.Booking.id }}" method="post">
                     <input type="submit" value="Delete" />

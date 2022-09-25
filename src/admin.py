@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask_login import login_required, current_user
-from flask import Blueprint, render_template, redirect, url_for, request, abort
+from flask import Blueprint, render_template, redirect, url_for, request
 
 from .models import Room, Booking, User
 from . import db, admin_required
@@ -13,7 +13,7 @@ admin = Blueprint('admin', __name__)
 def admin_page():
     bookings = db.session.query(Booking, Room, User).join(Room, Booking.room_id == Room.id).join(User, Booking.user_id == User.id).all()
 
-    return render_template('admin.html', admin_page=True, bookings=bookings, fromtimestamp=datetime.fromtimestamp)
+    return render_template('admin.html', admin_page=True, bookings=bookings, fromtimestamp=datetime.fromtimestamp, current_user=current_user)
 
 
 @admin.route('/admin/room', methods=['POST'])
