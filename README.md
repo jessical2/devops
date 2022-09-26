@@ -30,3 +30,9 @@ exit()
 ```
 flask seed
 ```
+
+### Admin Login
+
+Email: admin@admin.com
+
+Password: Admin
