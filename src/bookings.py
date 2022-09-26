@@ -44,24 +44,15 @@ def book_post():
         return redirect(url_for('bookings.book_page'))
 
     
-    # Query for bookings where room_id = room_id AND start_time > db.start_time AND start_time < db.end_time AND end_time > db.start_time
-    querybooking = Booking.query.filter(
-        or_(
-            and_(
-                room_id == Booking.room_id,
-                start_timestamp >= Booking.start_time,
-                start_timestamp <= Booking.end_time
-            ),
-            and_(
-                room_id == Booking.room_id,
-                start_timestamp <= Booking.start_time,
-                end_timestamp <= Booking.end_time,
-                end_timestamp >= Booking.start_time
-            )
-        )
-    )
+    # Bookings can not be made at the same time as eachother
+    querybooking = db.session.query(Booking) \
+            .filter((room_id == Booking.room_id) | (start_time >= Booking.start_time) | (start_time <= Booking.end_time)) \
+            .filter((room_id == Booking.room_id) | (end_time <= Booking.end_time) | (end_time >= Booking.start_time)) \
+            .filter((room_id == Booking.room_id) | (start_time <= Booking.start_time) | (end_time >= Booking.end_time))
+            
+        
 
-    if querybooking:
+    if not querybooking:
         flash('Room is already booked at this time')
         return redirect(url_for('bookings.book_page'))
     
