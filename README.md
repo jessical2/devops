@@ -27,7 +27,6 @@ from src import db, create_app
 db.create_all(app=create_app())
 exit()
 ```
-5. 
 ```
 flask seed
 ```
