@@ -1,4 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5 text-center">
+            <h2>All Bookings</h2>
+            {% include "bookings_table.html" %}
+            <hr/>
+            <h2>Add a Room</h2>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="notification is-danger">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+            {% endwith %}
+            <form action = "/admin/room" method = "POST">
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-large" type="text" name="name" placeholder="Name" autofocus="" autocomplete="off" required >
+                    </div>
+                </div>
+                <br>
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-large" type="number" name="capacity" placeholder="Capacity" required>
+                    </div>
+                </div>
+                <br>
+                <input class= "btn btn-primary" type = "submit" value= "Add Room" /><br>                
+            </form>
+        </div>
+    </div>
 {% endblock %}
