@@ -18,18 +18,10 @@ pip install flask-sqlalchemy flask-login
 ```
 3.
 ```
+export FLASK_APP=src/
 flask run
 ```
-The application comes with a pre-populated database, if you delete the database initialise a new one with the below commands and populate with an admin user
-```
-python
-from src import db, create_app
-db.create_all(app=create_app())
-exit()
-```
-```
-flask seed
-```
+
 
 ### Admin Login
 
