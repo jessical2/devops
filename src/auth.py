@@ -3,6 +3,8 @@ from flask_login import login_user, login_required, logout_user
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
+import re
+
 
 auth = Blueprint('auth', __name__)
 
@@ -39,6 +41,14 @@ def signup_post():
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
+    
+    if email_validator(email) == False:
+        flash('Email contains unaccepted characters')
+        return redirect(url_for('auth.signup'))
+    
+    if name_validator(name) == False:
+        flash('Name contains unaccepted characters')
+        return redirect(url_for('auth.signup'))
 
     user = User.query.filter_by(email=email).first() # If this returns a user, then the email already exists in database
 
@@ -64,3 +74,20 @@ def signup_post():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+
+# Validate emails input
+def email_validator(email):
+    # Check emails contain no special characters other than @ and .
+    if not re.match("^[A-Za-z0-9@.]+$", email):
+        return False
+    return True
+
+# Validate name input
+def name_validator(name):
+    # Check name contains no special characters
+    if not re.match("^([A-Za-z0-9]+$)", name): 
+        return False
+    return True     
+    
+
