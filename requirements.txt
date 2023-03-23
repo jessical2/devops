@@ -22,3 +22,5 @@ packaging==23.0
 pygments==2.14.0 
 rich==13.3.2 
 wrapt==1.15.0
+password-strength==0.0.3.post2 
+six==1.16.0

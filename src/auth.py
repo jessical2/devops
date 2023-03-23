@@ -5,10 +5,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 import re
 from .limiter import limiter
+from password_strength import PasswordPolicy
 
 
 auth = Blueprint('auth', __name__)
 
+password_policy = PasswordPolicy.from_names(
+    length=8,
+    uppercase=1,
+    numbers=1,
+    special=1,
+    nonletters=1
+)
 
 @auth.route('/login')
 def login():
@@ -52,14 +60,22 @@ def signup_post():
         flash('Name contains unaccepted characters')
         return redirect(url_for('auth.signup'))
 
-    user = User.query.filter_by(email=email).first() # If this returns a user, then the email already exists in database
+    # If this returns a user, then the email already exists in database
+    user = User.query.filter_by(email=email).first() 
 
-    if user: # If a user is found, redirect back to signup page so user can try again
+    # If a user is found, redirect back to signup page so user can try again
+    if user: 
         flash('Email address already exists. Use a different email or login')
         return redirect(url_for('auth.signup'))
     
     if email == "" or name == "" or password == "":
         flash('Please input all fields and try again')
+        return redirect(url_for('auth.signup'))
+
+    # Test password strength
+    validate_password = password_policy.test(password)
+    if len(validate_password) != 0:
+        flash("Password is not strong enough. Passwords must be at least 8 characters and contain a capital letter, number, and special character")
         return redirect(url_for('auth.signup'))
 
     # Create a new user with the form data. Hash the password.
