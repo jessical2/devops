@@ -13,8 +13,7 @@ source .venv/bin/activate
 ```
 2. Install flask and packages
 ```
-python -m pip install flask
-pip install flask-sqlalchemy flask-login 
+pip install -r requirements.txt
 ```
 3.
 ```
