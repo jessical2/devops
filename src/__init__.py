@@ -1,25 +1,14 @@
-# import click
-from flask import Flask, abort
-# from flask.cli import with_appcontext
+
+from flask import Flask, abort, render_template, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
+from .limiter import limiter
 
 from functools import wraps
 
 from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
-# login_manager = LoginManager()
-
-# @click.command
-# @with_appcontext
-# def seed():
-#     from .models import User
-#     new_admin = User(email='admin@admin.com', name='Admin', password=generate_password_hash('Admin', method='sha256'), admin=True)
-
-#     # add the new user to the database
-#     db.session.add(new_admin)
-#     db.session.commit()
 
 def create_app():
     app = Flask(__name__)
@@ -30,7 +19,11 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+   
     db.init_app(app)
+
+    # Initialise flask-limiter, apply across the application
+    limiter.init_app(app)
 
     with app.app_context():
         # blueprint for auth routes
@@ -65,11 +58,6 @@ def create_app():
 
         return app
 
-
-    
-    # app.cli.add_command(seed)
-
-    # return app
 
 def populate_admin():
     from .models import User

@@ -4,9 +4,11 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 import re
+from .limiter import limiter
 
 
 auth = Blueprint('auth', __name__)
+
 
 @auth.route('/login')
 def login():
@@ -90,4 +92,8 @@ def name_validator(name):
         return False
     return True     
     
+
+# def password_validator(password):
+#     if len(password)<8:
+#         flash()
 
