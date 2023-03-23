@@ -1,6 +1,6 @@
-import click
+# import click
 from flask import Flask, abort
-from flask.cli import with_appcontext
+# from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 
@@ -9,17 +9,17 @@ from functools import wraps
 from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
-login_manager = LoginManager()
+# login_manager = LoginManager()
 
-@click.command
-@with_appcontext
-def seed():
-    from .models import User
-    new_admin = User(email='admin@admin.com', name='Admin', password=generate_password_hash('Admin', method='sha256'), admin=True)
+# @click.command
+# @with_appcontext
+# def seed():
+#     from .models import User
+#     new_admin = User(email='admin@admin.com', name='Admin', password=generate_password_hash('Admin', method='sha256'), admin=True)
 
-    # add the new user to the database
-    db.session.add(new_admin)
-    db.session.commit()
+#     # add the new user to the database
+#     db.session.add(new_admin)
+#     db.session.commit()
 
 def create_app():
     app = Flask(__name__)
@@ -32,33 +32,56 @@ def create_app():
 
     db.init_app(app)
 
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
+    with app.app_context():
+        # blueprint for auth routes
+        from .auth import auth as auth_blueprint
+        app.register_blueprint(auth_blueprint)
 
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
+        # blueprint for main
+        from .main import main as main_blueprint
+        app.register_blueprint(main_blueprint)
 
-    # blueprint for auth routes
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint)
+        # blueprint for admin
+        from .admin import admin as admin_blueprint
+        app.register_blueprint(admin_blueprint)
 
-    # blueprint for main
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+        # blueprint for bookings
+        from .bookings import bookings as bookings_blueprint
+        app.register_blueprint(bookings_blueprint)
 
-    # blueprint for admin
-    from .admin import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint)
+        db.create_all()
 
-    # blueprint for bookings
-    from .bookings import bookings as bookings_blueprint
-    app.register_blueprint(bookings_blueprint)
+        checkUsers = User.query.filter_by(id='1').first()
+        if not checkUsers:
+            populate_admin()
+        
+        login_manager = LoginManager()
+        login_manager.login_view = 'auth.login'
+        login_manager.init_app(app)
+
+        @login_manager.user_loader
+        def load_user(user_id):
+            return User.query.get(int(user_id))
+
+        return app
+
+
     
-    app.cli.add_command(seed)
+    # app.cli.add_command(seed)
 
-    return app
+    # return app
+
+def populate_admin():
+    from .models import User
+
+    password= generate_password_hash('Admin', method='sha256')
+    db.session.add_all(
+        [
+            User(email="admin@admin.com", name="Admin", password=password, admin=True)
+        ]
+    )
+    db.session.commit()
+
 
 def admin_required(f):
     @wraps(f)
