@@ -46,7 +46,7 @@ def create_app():
 
         checkUsers = User.query.filter_by(id='1').first()
         if not checkUsers:
-            populate_admin()
+            populate_demo_users()
         
         login_manager = LoginManager()
         login_manager.login_view = 'auth.login'
@@ -59,13 +59,15 @@ def create_app():
         return app
 
 
-def populate_admin():
+def populate_demo_users():
     from .models import User
 
-    password= generate_password_hash('Admin', method='sha256')
+    password1= generate_password_hash('Admin', method='sha256')
+    password2= generate_password_hash('User', method='sha256')
     db.session.add_all(
         [
-            User(email="admin@admin.com", name="Admin", password=password, admin=True)
+            User(email="admin@admin.com", name="Admin", password=password1, admin=True),
+            User(email="user@user.com", name="User", password=password2, admin=False)
         ]
     )
     db.session.commit()

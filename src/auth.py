@@ -73,10 +73,10 @@ def signup_post():
         return redirect(url_for('auth.signup'))
 
     # Test password strength
-    validate_password = password_policy.test(password)
-    if len(validate_password) != 0:
+    if password_validator(password) == False:
         flash("Password is not strong enough. Passwords must be at least 8 characters and contain a capital letter, number, and special character")
         return redirect(url_for('auth.signup'))
+
 
     # Create a new user with the form data. Hash the password.
     new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), admin=False)
@@ -106,10 +106,15 @@ def name_validator(name):
     # Check name contains no special characters
     if not re.match("^([A-Za-z0-9]+$)", name): 
         return False
-    return True     
-    
+    return True   
 
-# def password_validator(password):
-#     if len(password)<8:
-#         flash()
+
+def password_validator(password):
+    # Test password strength
+    validate_password = password_policy.test(password)
+    if len(validate_password) != 0:
+        return False
+    return True
+
+
 
