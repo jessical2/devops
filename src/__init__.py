@@ -1,25 +1,14 @@
-# import click
-from flask import Flask, abort
-# from flask.cli import with_appcontext
+
+from flask import Flask, abort, render_template, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
+from .limiter import limiter
 
 from functools import wraps
 
 from werkzeug.security import generate_password_hash
 
 db = SQLAlchemy()
-# login_manager = LoginManager()
-
-# @click.command
-# @with_appcontext
-# def seed():
-#     from .models import User
-#     new_admin = User(email='admin@admin.com', name='Admin', password=generate_password_hash('Admin', method='sha256'), admin=True)
-
-#     # add the new user to the database
-#     db.session.add(new_admin)
-#     db.session.commit()
 
 def create_app():
     app = Flask(__name__)
@@ -30,7 +19,11 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+   
     db.init_app(app)
+
+    # Initialise flask-limiter, apply across the application
+    limiter.init_app(app)
 
     with app.app_context():
         # blueprint for auth routes
@@ -53,7 +46,7 @@ def create_app():
 
         checkUsers = User.query.filter_by(id='1').first()
         if not checkUsers:
-            populate_admin()
+            populate_demo_users()
         
         login_manager = LoginManager()
         login_manager.login_view = 'auth.login'
@@ -66,18 +59,15 @@ def create_app():
         return app
 
 
-    
-    # app.cli.add_command(seed)
-
-    # return app
-
-def populate_admin():
+def populate_demo_users():
     from .models import User
 
-    password= generate_password_hash('Admin', method='sha256')
+    password1= generate_password_hash('Admin', method='sha256')
+    password2= generate_password_hash('User', method='sha256')
     db.session.add_all(
         [
-            User(email="admin@admin.com", name="Admin", password=password, admin=True)
+            User(email="admin@admin.com", name="Admin", password=password1, admin=True),
+            User(email="user@user.com", name="User", password=password2, admin=False)
         ]
     )
     db.session.commit()

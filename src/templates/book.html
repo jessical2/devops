@@ -2,7 +2,7 @@
 {% block content %}
     <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-5 text-center">
-            <h2 class="display-5 fw-bold">Book a Room</h2>
+            <h2 class="display-6">Book a Room</h2>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="notification is-danger">
@@ -10,34 +10,27 @@
                 </div>
             {% endif %}
             {% endwith %}
+            <br>
             <form action = "/book" method = "POST">
-                <div class="field">
-                    <div class="control">
-                        <input class="input is-large" type="text" name="name" placeholder="Meeting Name" autofocus="" autocomplete="off" required>
-                    </div>
+                <div class="form-group">
+                    <input class="form-control input is-large" type="text" name="name" placeholder="Meeting Name" autofocus="" autocomplete="off" required>
                 </div>
                 <br>
-                <div class="field">
-                    <div class="control">
-                        <select class="input is-large" name="room" required>
-                            <option value="" disabled selected>Select a room</option>
-                            {% for item in rooms %}
-                                <option value="{{ item.id }}">{{ item.name }} (Capacity: {{ item.capacity }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <select class="form-control" name="room" required>
+                        <option value="" disabled selected>Select a room</option>
+                        {% for item in rooms %}
+                            <option value="{{ item.id }}">{{ item.name }} (Capacity: {{ item.capacity }})</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <br>
-                <div class="field">
-                    <div class="control">
-                        <input class="input is-large" type="datetime-local" name="starttime" placeholder="Start Time" required>
-                    </div>
+                <div class="form-group">
+                    <input class="form-control input is-large" type="datetime-local" name="starttime" placeholder="Start Time" required>
                 </div>
                 <br>
-                <div class="field">
-                    <div class="control">
-                        <input class="input is-large" type="datetime-local" name="endtime" placeholder="End Time" required>
-                    </div>
+                <div class="form-group">
+                    <input class="form-control input is-large" type="datetime-local" name="endtime" placeholder="End Time" required>
                 </div>
                 <br>
                 <input class= "btn btn-primary" type = "submit" value= "Book" /><br>

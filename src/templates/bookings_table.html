@@ -5,6 +5,9 @@
         <th>Start Time</th>
         <th>End Time</th>
         <th>Room Name</th>
+        {% if current_user.is_admin%}
+        <th></th>
+        {% endif %}
     </thead>
     {% for item in bookings %}
     <tr>
@@ -16,7 +19,7 @@
         {% if current_user.is_admin%}
             <td>
                 <form action="/bookings/{{ item.Booking.id }}" method="post">
-                    <input type="submit" value="Delete" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </td>
         {% endif %}
