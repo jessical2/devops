@@ -1,5 +1,4 @@
-# Meeting-Rooms
-Meeting Room Booking Application
+# Meeting-Room Booking Application
 This application is a meeting room booking app where users can sign up, login, and book a meeting room.
 Users can also view meeting rooms they have booked.
 
