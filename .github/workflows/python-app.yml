@@ -30,7 +30,7 @@ jobs:
         pylint --fail-under=4 $(git ls-files '*.py') 
     - name: Test with pytest
       run: |
-        pytest
+        pytest test.py
         
   analyze:
     name: Analyze
